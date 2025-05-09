@@ -4,9 +4,14 @@ object camion {
     method pesoTotal() = self.pesoDeCarga() + 1000
     method cargar(unaCosa) {
       carga.add(unaCosa)
+      unaCosa.consecuenciaDeCarga()
     }
     method descargar(unaCosa) {
       carga.remove(unaCosa)
+    }
+    method cargarMasDeUna(lista) {
+      carga.addAll(lista)
+      lista.forEach({c => c.consecuenciaDeCarga()})
     }
     method todoPesopar() = carga.all({c => c.peso().even()})// even->par / odd->impar
     method hayAlgoQuePesa(unValor) = carga.any({c => c.peso() == unValor })
@@ -17,5 +22,5 @@ object camion {
     method puedeCircular(unValor) = not self.camionExcedidoDePeso() and self.cosasQueSuperanPeligrosidad(unValor).isEmpty()      
     method tieneAlgoQuePesaEntre(min,max) = carga.any({c=>c.peso().between(min, max)}) 
     method cosaMasPesada() = carga.max({c => c.peso()})
-}
 
+}

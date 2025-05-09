@@ -4,7 +4,9 @@ object cosas {
 
 object knightRider {
   method peso() = 500  
-  method peligrosidad() = 10  
+  method peligrosidad() = 10 
+  method bulto() = 1
+  method consecuenciaDeCarga() {}
 }
 object bumblebee {  
   method peso() = 800  
@@ -20,17 +22,26 @@ object bumblebee {
     estaTransformado = not estaTransformado
   }
   method estaTransformado() = estaTransformado
+  method bulto() = 2
+  method consecuenciaDeCarga() {self.transformar()}
 }
 
 object ladrillos {
-    var property cantidad = 0
-    method peligrosidad() = 2
-    method peso() = 2 * cantidad 
+  var property cantidad = 0
+  method peligrosidad() = 2
+  method peso() = 2 * cantidad 
+  method bulto() = 
+    if(cantidad <= 100) 1 
+    else if(cantidad.between(101, 300)) 2
+    else 3
+  method consecuenciaDeCarga() {cantidad += 12}
 }
 
 object arena{
     var property peso = 0
     method peligrosidad() = 1
+    method bulto() = 1
+    method consecuenciaDeCarga() {peso = (peso - 10).max(0)}
 }
 
 object bateriaAntiarea{
@@ -45,6 +56,8 @@ object bateriaAntiarea{
     method descargarMisiles(){
         tieneMisiles = false
         }
+    method bulto() = if (tieneMisiles)2 else 1  
+    method consecuenciaDeCarga() {self.cargarMisiles()}
 }
 
 object contenedor {
@@ -64,12 +77,16 @@ object contenedor {
     method vaciarListaDeCosas(unaLista) {
       contenido.clear()
     }
+    method bulto() = 1 + contenido.sum({c => c.bulto()})
+    method consecuenciaDeCarga() {contenido.forEach({c => c.consecuenciaDeCarga()})}
 
 }
 
 object residuos {
     var property peso = 0
     method peligrosidad() = 200 
+    method bulto() = 1
+    method consecuenciaDeCarga() {peso += 15}
 }
 
 object embalaje {
@@ -77,4 +94,6 @@ object embalaje {
     method envolver(unaCosa)  {cosaEnvuelta = unaCosa}
     method peso() = cosaEnvuelta.peso()
     method peligrosidad() = cosaEnvuelta.peligrosidad() / 2
+    method bulto() = 2
+    method consecuenciaDeCarga() {}
     }
